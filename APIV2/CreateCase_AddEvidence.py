@@ -20,6 +20,20 @@ headers = {'EnterpriseApiKey': Enterprisekey}
 statuscheckresp = requests.get('http://'+servername+':4443/api/v2/enterpriseapi/statuscheck',headers = headers)
 print("Checking Status of API... " + statuscheckresp.reason)
 #TODO add in if not OK, exit here
+casename ="Testcase"
+top = tkinter.Tk()
+top.title("Automate AD LAB 7.1")
+#Add in case name
+top.geometry("400x300")
+lbl = tkinter.Label(top, text = "Please enter your case name:")
+lbl.grid(column =0, row=0)
+txt = tkinter.Entry(top, width = 50)
+txt.grid(column = 0, row = 1)
+def clicked():
+    casename = txt.get()
+btn = tkinter.Button(top, text = "Enter", command = clicked)
+btn.grid(column = 1, row = 1)
+top.mainloop()
 
 casename = input("Enter the case name: ")
 #CaseName is going to be the name of the folder
@@ -29,41 +43,52 @@ casename = input("Enter the case name: ")
 #if(casepath.endswith("\\") == 0):
 #    casepath = casepath + "\\"
 casepath = defaultcasepath + casename
-responsivepath = casepath +"\\responsive"
+responsivepath = casepath +"\\evidence"
 #The os call below uses the credentials the python script is running, not what AD is running
-#if not os.path.exists(casepath):
-#    os.makedirs(casepath)
-#    os.makedirs(responsivepath)
-#else:
-#    sys.exit()
+if not os.path.exists(responsivepath):
+    os.makedirs(responsivepath)
+
 
 print(casepath)
-#Place Evidence here, say ready when complete
-evidence = input("Enter evidence path(s) - (separated by comma): ")
-#Example \\myevidenceserver\evidence1, \\myevidenceserver\evidence2
+
 #Parse
 
-createcase = {"Name": casename, "ProcessingMode":2,"FTKCaseFolderPath": casepath,"ResponsiveFilePath": responsivepath}
+createcase = {"Name": casename, "ProcessingMode":2, "description": "Scott is asking questions...","FTKCaseFolderPath": casepath,"ResponsiveFilePath": responsivepath}
 resp = requests.post('http://'+servername+':4443/api/v2/enterpriseapi/createcase',createcase,headers=headers)
 
 print("Case Created Response... " + resp.reason)
 caseid = resp.text
 print("CaseID " + caseid)
+if not os.path.exists(responsivepath):
+    os.makedirs(responsivepath)
+
 #Pull caseid from resp.content
 #wait until case is created...
 #caseid = 2
-evidencearray = evidence.split(",")
-print(evidencearray)
-for evidencepath in evidencearray:
-    evidencepath = str(evidencepath)
-    evidencepath = evidencepath.lstrip()
-    print(evidencepath)
+
+#Place Evidence here, say ready when complete
+#evidence = input("Enter evidence path(s) - (separated by comma): ")
+#Example \\myevidenceserver\evidence1, \\myevidenceserver\evidence2
+input("Place Evidence in this directory: " + responsivepath + ", Click Enter When Ready.")
+print("Loading Folders of Evidence...")
+print(os.listdir(responsivepath))
+
+#Splits the evidence into an array
+#evidencearray = evidence.split(",")
+#print(evidencearray)
+
+#for evidencepath in evidencearray:
+for DirectoryName in os.listdir(responsivepath):
+    #evidencepath = str(evidencepath)
+    #evidencepath = evidencepath.lstrip()
+    evidencepath = responsivepath + "\\" + DirectoryName
+    print("Loading " + evidencepath)
     evidence = {'evidenceToCreate': { 'evidencePath': evidencepath }, 'ProcessingOptions':{'PresetType': 1000 }}
     resp = requests.post('http://'+servername+':4443/api/v2/enterpriseapi/'+str(caseid)+'/processdata',json = evidence,headers=headers)
-    print(resp)
-    print(resp.content)
+    print("Submit status " + resp.reason)
+    print("JobID " + str(resp.content))
     #This is what a good response looks like:
-    #<Response [200]>
+    #OK
     #b'[77]'
 
     #Images in a folder?
