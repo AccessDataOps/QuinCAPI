@@ -106,8 +106,8 @@ print()
 
 # Poll the job status
 while (data["state"] == "InProgress") or (data["state"] == "Submitted"):
-    print("Job %s is %s.  Will check again in 3 minutes." % (JobID,data["state"]))
-    time.sleep(180)
+    print("Job %s is %s.  Will check again in 1 minute." % (JobID,data["state"]))
+    time.sleep(60)
     resp = requests.get("http://" + APIhostname + ":4443/api/v2/enterpriseapi/"+str(CaseID)+"/getjobstatus/"+str(JobID),headers = headers)
     data = json.loads(resp.content.decode(chardet.detect(resp.content)["encoding"]))
 
