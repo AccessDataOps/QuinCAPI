@@ -3,6 +3,7 @@ import requests
 import json
 import re
 from requests.exceptions import ConnectionError
+import os
 
 # Clean and properly parse the response content from the 'getjobstatus' operation
 # Returns a properly formatted Python dictionary
@@ -54,4 +55,36 @@ def VolatileJob(APIkey, APIhostname, CaseID, definition):
 # Returns status
 def AddVolatile(APIkey, APIhostname, CaseID, JobID):
     response = requests.get('http://' + APIhostname + ':4443/api/v2/enterpriseapi/'+str(CaseID)+'/importvolatile/'+str(JobID),headers = {'EnterpriseApiKey': APIkey})
+    return response.reason
+
+# Detects evidence type based on a given path
+# File or folder of natives = 0
+# Folder of images = 1
+# Image = 2
+# Text = 3
+# Returns evidence type as an integer
+def DetectEvidenceType(path):
+    # Check if path ends in an extension matching a supported image type
+    if (re.search('(\.ad1|\.e01|\.ex01|\.l01|\.lx01|\.aff|\.vhd|\.nrg|\.s01\.001\.1|\.bin|\.cue|\.dd|\.dmg|\.ima|\.img|\.iso|\.raw|\.vmdk|\.vdi|\.mds|\.ccd|\.pxi|\.vc4|\.yaffs1|\.yaffs2)$', path.lower())):
+        evidencetype = 2
+    # Check if path is a non-image file
+    elif (re.search('(\..{1,3})$', path)):
+        evidencetype = 0
+    else:
+        containsimage = False
+        # Check if path contains any files ending in an extension matching a supported image type
+        for file in os.listdir(path):
+            if (re.search('(\.ad1|\.e01|\.ex01|\.l01|\.lx01|\.aff|\.vhd|\.nrg|\.s01|\.001|\.1|\.bin|\.cue|\.dd|\.dmg|\.ima|\.img|\.iso|\.raw|\.vmdk|\.vdi|\.mds|\.ccd|\.pxi|\.vc4|\.yaffs1|\.yaffs2)$', file.lower())):
+                containsimage = True
+        if (containsimage == True):
+            evidencetype = 1
+        # Treat it as a folder of natives
+        else:
+            evidencetype = 0
+    return evidencetype
+
+# Processes evidence (image or native)
+# Returns status
+def AddEvidence(APIkey, APIhostname, CaseID, definition):
+    response = requests.post('http://'+APIhostname+':4443/api/v2/enterpriseapi/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey})
     return response.reason
