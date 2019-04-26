@@ -45,7 +45,8 @@ for item in items:
 
 print()
 print("Please review the items listed before continuing.")
-print("If more than one file is listed, they must either be segments of the same image or individual natives.")
+print("The Processing Engine must have access to all paths listed.")
+print("If more than one file is listed, they must either be segments of the same image, or be individual natives.")
 os.system("pause")
 
 # Only check the evidence type of the first file
