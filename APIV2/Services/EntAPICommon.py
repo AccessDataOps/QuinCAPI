@@ -1,9 +1,15 @@
+# Version: .3
+# Date: 4/29/2019
+# 
 # A collection of commonly referenced funtions for use with the EnterpriseAPI calls
+
 import requests
 import json
 import re
 from requests.exceptions import ConnectionError
 import os
+import pyodbc
+import socket
 
 # Clean and properly parse the response content from the 'getjobstatus' operation
 # Returns a properly formatted Python dictionary
@@ -88,3 +94,26 @@ def DetectEvidenceType(path):
 def AddEvidence(APIkey, APIhostname, CaseID, definition):
     response = requests.post('http://'+APIhostname+':4443/api/v2/enterpriseapi/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey})
     return response.reason
+
+# Runs a SQL query against MSSQL
+# Returns results as a list
+def QueryMSSQL(InstanceName, DatabaseName, Query):
+    connectstring = 'Driver={SQL Server};Server=%s;Database=%s;Trusted_Connection=yes;' % (InstanceName, DatabaseName)
+    conn = pyodbc.connect(connectstring)
+    cursor = conn.cursor()
+    cursor.execute(Query)
+    results = []
+    for row in cursor:
+        results.append(row)
+    return results
+
+# Checks if a target is listening on a specified port
+# Returns True or False
+def IsPortListening(IP, Port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex((IP,Port))
+    sock.close()
+    if result == 0:
+        return True
+    else:
+        return False

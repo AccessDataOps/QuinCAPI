@@ -1,4 +1,4 @@
-# Version: .2
+# Version: .3, sql query, port check
 # Date: 4/29/2019
 #
 # In Windows Explorer, drag-and-drop a set of files onto this script's icon
