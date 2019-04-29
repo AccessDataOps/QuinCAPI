@@ -1,7 +1,8 @@
-# Version: .3
+# Version: .5, fixed MSSQL queries
 # Date: 4/29/2019
 # 
-# A collection of commonly referenced funtions for use with the EnterpriseAPI calls
+# DO NOT RUN THIS SCRIPT
+# This script contains commonly used funtions for use other EnterpriseAPI scripts
 
 import requests
 import json
@@ -96,15 +97,16 @@ def AddEvidence(APIkey, APIhostname, CaseID, definition):
     return response.reason
 
 # Runs a SQL query against MSSQL
-# Returns results as a list
+# Returns results as a list of dictionaries
 def QueryMSSQL(InstanceName, DatabaseName, Query):
     connectstring = 'Driver={SQL Server};Server=%s;Database=%s;Trusted_Connection=yes;' % (InstanceName, DatabaseName)
     conn = pyodbc.connect(connectstring)
     cursor = conn.cursor()
     cursor.execute(Query)
+    columns = [column[0] for column in cursor.description]
     results = []
-    for row in cursor:
-        results.append(row)
+    for row in cursor.fetchall():
+        results.append(dict(zip(columns, row)))
     return results
 
 # Checks if a target is listening on a specified port

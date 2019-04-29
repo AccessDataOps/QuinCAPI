@@ -20,7 +20,7 @@ import os
 import EntAPICommon
 
 # UPDATE THESE
-APIkey = "6400ddd5-6419-450a-b96c-a568f5ea309b" # Generated in Enterprise via Tools > Access API Key
+APIkey = "84af3650-176a-4edf-bad8-25ad5b708f37" # Generated in Enterprise via Tools > Access API Key
 APIhostname = "WIN-B3VKJBVM6RQ" # Machine (name or IP) running Enterprise and Quin-C Self Host Service
 ProjectData = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
 
