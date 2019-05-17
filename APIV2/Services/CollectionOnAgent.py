@@ -1,7 +1,5 @@
-# DEPRECATED AND REPLACED BY GetVolatile.py
-# 
-# Version: .6, can use existing cases
-# Date: 4/29/2019
+# Version: .1
+# Date: 5/3/2019
 #
 # This script will do the following:
 # 1. Prompt to create a new case or use an existing one
@@ -101,14 +99,22 @@ if not EntAPICommon.IsPortListening(str(targets), 3999):
 
 # Grab Processes, Services, Network Sockets
 # TODO: include hidden processes, DLLs (including injected), Sockets, Handles, Services, Drivers, Users, and Network info
-volatileDefinition = {
-  "volatile": {
-    "includeProcessTree": True, # True/False, gets running Processes
-    "processTreeOptions": {
-      "includeDlls": True, # True/False, gets open DLLs, requires includeProcessTree
-      "includeSockets": True # True/False, gets open Sockets, requires includeProcessTree
-    },
-    "includeServices": True # True/False, gets running Services
+CollectionOnAgentDefinition = {
+  "collectionOnAgent": {
+    "filter": {
+      "fileFilters": {
+        "fileInclusionFilter": [
+          {
+            "fileExtensions": {
+              "fileExtensions": [
+                "txt"
+              ],
+              "operator": 1
+            }
+          }
+        ],        
+        }
+      },   
   },
   "ips": {
     "targets": [
@@ -117,7 +123,7 @@ volatileDefinition = {
   }
 }
 
-JobID = EntAPICommon.VolatileJob(APIkey, APIhostname, CaseID, volatileDefinition)
+JobID = EntAPICommon.CollectionOnAgent(APIkey, APIhostname, CaseID, CollectionOnAgentDefinition)
 
 print()
 # Poll the job status

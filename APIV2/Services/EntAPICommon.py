@@ -1,5 +1,5 @@
-# Version: .5, fixed MSSQL queries
-# Date: 4/29/2019
+# Version: .9, added CopyJobReports
+# Date: 5/17/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
@@ -8,23 +8,23 @@ import requests
 import json
 import re
 from requests.exceptions import ConnectionError
-import os
 import pyodbc
 import socket
+import os
+import time
+from datetime import datetime
+from shutil import copyfile
 
 # Clean and properly parse the response content from the 'getjobstatus' operation
 # Returns a properly formatted Python dictionary
-def CleanResponse(content):
-    cleanResponse = str(content).replace('\\\\r\\\\n','')
-    cleanResponse = cleanResponse.replace("b'{",'{')
+def CleanResponse(text):
+    cleanResponse = str(text)
     cleanResponse = re.sub(r'\\*"','"',cleanResponse)
-    cleanResponse = cleanResponse.replace('"{','{')
-    cleanResponse = cleanResponse.replace('}"','}')
-    cleanResponse = cleanResponse.replace("}'",'}')
-    cleanResponse = cleanResponse.replace('"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\','"\\\\\\\\')
-    cleanResponse = cleanResponse.replace('"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\','"\\\\\\\\')
-    cleanResponse = cleanResponse.replace('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\','\\\\')
-    cleanResponse = cleanResponse.replace('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\','\\\\')
+    cleanResponse = re.sub(r'\\r\\n\s*','',cleanResponse)
+    cleanResponse = cleanResponse.replace('"{"','{"')
+    cleanResponse = re.sub(r'(?<![0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})}"','}',cleanResponse, flags=re.IGNORECASE)
+    cleanResponse = cleanResponse.replace('\\\\\\\\','\\')
+    cleanResponse = re.sub(r'(?<!")\\\\\\\\',r'\\\\',cleanResponse)
     return json.loads(cleanResponse)
 
 # Checks if the API is up
@@ -44,7 +44,7 @@ def IsApiUp(APIhostname):
 # Returns reponse content (job info) as a Python dictionary
 def GetJobInfo(APIkey, APIhostname, CaseID, JobID):
     response = requests.get('http://' + APIhostname + ':4443/api/v2/enterpriseapi/'+str(CaseID)+'/getjobstatus/'+str(JobID),headers = {'EnterpriseApiKey': APIkey})
-    return CleanResponse(response.content)
+    return CleanResponse(response.text)
 
 # Creates a new case
 # Returns new Case ID
@@ -119,3 +119,44 @@ def IsPortListening(IP, Port):
         return True
     else:
         return False
+
+# Runs a collection job, storing the results on the target
+# Returns new Job ID
+def CollectionOnAgent(APIkey, APIhostname, CaseID, definition):
+    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/'+str(CaseID)+'/collectiononagent',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    return response.content.decode("utf-8")
+
+# JSON doesn't allow comments, so this strips comments out when reading in a JSON-formatted definition
+# Returns JSON dictionary
+def FileToJSON(DefinitionFile):
+    with open(DefinitionFile, 'r') as file:
+        filedata = file.read()
+    strippedComments = re.sub(r'#.*\n','\n',filedata)
+    return json.loads(strippedComments)
+
+# Runs a software inventory job
+# Returns new Job ID
+def SoftwareInventoryJob(APIkey, APIhostname, CaseID, definition):
+    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/'+str(CaseID)+'/sofwareinventory',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    return response.content.decode("utf-8")
+
+# Copies the XML files for a job into a more accessible location
+# Returns string showing where the reports are
+def CopyJobReports(APIkey, APIhostname, CaseID, JobID, ReportsPath):
+    jobinfo = GetJobInfo(APIkey, APIhostname, CaseID, JobID)
+    # Get the Target Name and list of ResultFiles from the job info
+    target = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Details"]["Name"]
+    resultfiles = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Results"][1]["ResultFileLocation"]
+    # Build a list of the result XML files
+    tasks = []
+    for i in range(0,len(resultfiles)):
+        tasks.append({"Target": target, "Path": resultfiles[i]["FilePath"], "Filename": os.path.basename(resultfiles[i]["FilePath"])})
+    # Copy the result XML files to a nicer location and name
+    if not os.path.exists(ReportsPath):
+            os.makedirs(ReportsPath)
+    starttime = datetime.strptime(jobinfo["startDate"], '%Y-%m-%dT%H:%M:%S.%f') # Parse the job info timestamp to something Python understands
+    for i in range(0,len(tasks)):
+        src = tasks[i]["Path"]
+        dst = "%s\\%s_%s_%s" % (ReportsPath,tasks[i]["Target"],starttime.strftime("%Y%m%d%H%M%SUTC"),tasks[i]["Filename"])
+        copyfile(src,dst)
+    return "The XML reports for job %s can be found in '%s'.\nThese can be opened with Excel." % (JobID, ReportsPath)

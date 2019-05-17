@@ -7,6 +7,9 @@
 # Usage
 # Add a DPE:      ScaleDPEs.py -a <Hostname/IP>
 # Remove a DPE:   ScaleDPEs.py -r <Hostname/IP>
+#
+# Can be called remotely via WMIC, potentially allowing a DPE to add itself
+# wmic /node:DPMip /user:"domain\user" /password:"password" process call create "scriptPathOnDPM -a myIP"
 
 import winreg
 import sys

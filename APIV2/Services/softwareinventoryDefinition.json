@@ -1,0 +1,13 @@
+# Comments are included to understand the parameters in the API operation
+# Proper JSON doesn't allow for comments
+# The FileToJSON function in EntAPICommon.py will remove all single-line comments when reading this
+{
+  "softwareInvJob": {
+    "operation": 0
+  },
+  "ips": {
+    "targets": [
+      "string" # string, target hostname or IP
+    ]
+  }
+}

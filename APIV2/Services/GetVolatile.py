@@ -1,12 +1,10 @@
-# DEPRECATED AND REPLACED BY GetVolatile.py
-# 
-# Version: .6, can use existing cases
-# Date: 4/29/2019
+# Version: .8, references external files for the definitions
+# Date: 5/17/2019
 #
 # This script will do the following:
 # 1. Prompt to create a new case or use an existing one
 # 2. Prompt for a target
-# 3. Collect volatile data from that target
+# 3. Collect volatile data from that target, according to the external definition
 # 4. Rename the XML files with the results, for outside viewing
 # 5. Import the collected volatile data into the case
 #
@@ -25,7 +23,9 @@ import EntAPICommon
 # UPDATE THESE
 APIkey = "84af3650-176a-4edf-bad8-25ad5b708f37" # Generated in Enterprise via Tools > Access API Key
 APIhostname = "WIN-B3VKJBVM6RQ" # Machine (name or IP) running Enterprise and Quin-C Self Host Service
-ProjectData = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
+ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
+CreateCaseDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\createcaseDefinition.json" # File with the definition settings to use
+VolatileDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\volatileDefinition.json" # File with the definition settings to use
 
 # Connection test
 if EntAPICommon.IsApiUp(APIhostname):
@@ -41,8 +41,8 @@ print()
 choice = ''
 while choice not in ['1','2']:
     print("Choose from the following:")
-    print("1 - Process into a new case")
-    print("2 - Process into an existing case")
+    print("1 - Create a new case")
+    print("2 - Use an existing case")
     choice = input("Enter 1 or 2: ")
     if choice not in ['1','2']:
         print("Invalid selection!")
@@ -50,30 +50,29 @@ while choice not in ['1','2']:
 if choice == '1':
     # Prompt for a case name
     print()
-    print("Case data will be stored at '%s'" % ProjectData)
+    print("Case data will be stored at '%s'" % ProjectDataPath)
     CaseName = input("Enter your desired case name: ")
 
     # Create the case and get the CaseID
     # TODO: Get the CaseID for an existing case
     print()
     print("Creating case '%s'..." % CaseName)
-    ProjectData = ProjectData + "\\" + CaseName
-    JobData = ProjectData + "\\JobData"
-    Reports = ProjectData + "\\Reports"
+    ProjectDataPath = ProjectDataPath + "\\" + CaseName
+    JobDataPath = ProjectDataPath + "\\JobData"
+    ReportsPath = ProjectDataPath + "\\Reports"
 
-    if not os.path.exists(ProjectData):
-        os.makedirs(ProjectData)
+    if not os.path.exists(ProjectDataPath):
+        os.makedirs(ProjectDataPath)
 
-    createcaseDefinition = {
-    "name": CaseName,
-    "ftkCaseFolderPath": ProjectData,
-    "responsiveFilePath": JobData,
-    "processingMode": 2
-    }
+    createcaseDefinition = EntAPICommon.FileToJSON(CreateCaseDefinitionFile)
+    createcaseDefinition["name"] = CaseName
+    createcaseDefinition["ftkCaseFolderPath"] = ProjectDataPath
+    createcaseDefinition["responsiveFilePath"] = JobDataPath
+    createcaseDefinition["processingMode"] = 2
 
     CaseID = EntAPICommon.CreateCase(APIkey, APIhostname, createcaseDefinition)
     print("Case ID: %s" % CaseID)
-    print("Project folder: %s" % ProjectData)
+    print("Project folder: %s" % ProjectDataPath)
 elif choice == '2':
     print()
     CaseID = input("Enter the desired case's Case ID: ")
@@ -85,7 +84,7 @@ elif choice == '2':
     Query = 'SELECT CasePath FROM [ADG].[ADG7x1].[cmn_Cases] WHERE CaseID = %s' % CaseID
     results = EntAPICommon.QueryMSSQL(InstanceName, DatabaseName, Query)
     CasePath = results[0]["CasePath"]
-    Reports = os.path.dirname(CasePath) + "\\Reports"
+    ReportsPath = os.path.dirname(CasePath) + "\\Reports"
 
 # Prompt you for a target IP
 # TODO: Can we do comma separated values, hostname, IP range, host name, or import a list from  a TXT file?
@@ -99,24 +98,9 @@ if not EntAPICommon.IsPortListening(str(targets), 3999):
   os.system("pause")
   raise SystemExit
 
-# Grab Processes, Services, Network Sockets
-# TODO: include hidden processes, DLLs (including injected), Sockets, Handles, Services, Drivers, Users, and Network info
-volatileDefinition = {
-  "volatile": {
-    "includeProcessTree": True, # True/False, gets running Processes
-    "processTreeOptions": {
-      "includeDlls": True, # True/False, gets open DLLs, requires includeProcessTree
-      "includeSockets": True # True/False, gets open Sockets, requires includeProcessTree
-    },
-    "includeServices": True # True/False, gets running Services
-  },
-  "ips": {
-    "targets": [
-      str(targets)
-    ]
-  }
-}
-
+# Grab the operation definition and update it with our targets, then kick off the job
+volatileDefinition = EntAPICommon.FileToJSON(VolatileDefinitionFile)
+volatileDefinition["ips"]["targets"] = [str(targets)]
 JobID = EntAPICommon.VolatileJob(APIkey, APIhostname, CaseID, volatileDefinition)
 
 print()
@@ -142,28 +126,10 @@ else:
   os.system("pause")
   raise SystemExit
 
-# Get the Target Name and list of ResultFiles from the job info
-target = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Details"]["Name"]
-resultfiles = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Results"][1]["Data"]["ResultFiles"]
-
-# Build a list of the result XML files
-tasks = []
-for i in range(0,len(resultfiles)):
-    if (resultfiles[i]["Filename"] != "certificates.xml"): # We don't care about this file
-        tasks.append({"Target": target, "Path": resultfiles[i]["Path"], "Filename": resultfiles[i]["Filename"]})
-
-# Copy the result XML files to a nicer location and name
-if not os.path.exists(Reports):
-        os.makedirs(Reports)
-starttime = datetime.strptime(jobinfo["startDate"], '%Y-%m-%dT%H:%M:%S.%f') # Parse the job info timestamp to something Python understands
-for i in range(0,len(tasks)):
-    src = tasks[i]["Path"]
-    dst = "%s\\%s_%s_%s" % (Reports,tasks[i]["Target"],starttime.strftime("%Y%m%d%H%M%SUTC"),tasks[i]["Filename"])
-    copyfile(src,dst)
-
+# Place XML results in an easily accessible place
 print()
-print("XML reports can be found in '%s'" % Reports)
-print("These can be opened with Excel.")
+print("Fetching result reports.")
+print(EntAPICommon.CopyJobReports(APIkey, APIhostname, CaseID, JobID, ReportsPath))
 
 # Import collected data into the case
 print()

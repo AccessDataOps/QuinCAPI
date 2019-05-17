@@ -1,5 +1,5 @@
-# Version: .3, sql query, port check
-# Date: 4/29/2019
+# Version: .4, use external definition
+# Date: 5/17/2019
 #
 # In Windows Explorer, drag-and-drop a set of files onto this script's icon
 # This script will do the following:
@@ -15,14 +15,28 @@
 # EntAPICommon.py must reside in the same folder as this script.
 # Make sure to update APIkey, APIhostname, and ProjectData.
 
-import sys
 import os
+import time
+from datetime import datetime
+from shutil import copyfile
 import EntAPICommon
+import sys
 
 # UPDATE THESE
 APIkey = "84af3650-176a-4edf-bad8-25ad5b708f37" # Generated in Enterprise via Tools > Access API Key
 APIhostname = "WIN-B3VKJBVM6RQ" # Machine (name or IP) running Enterprise and Quin-C Self Host Service
-ProjectData = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
+ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
+CreateCaseDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\createcaseDefinition.json" # File with the definition settings to use
+
+if len(sys.argv) == 1:
+    print("Usage:")
+    print("In Windows Explorer, drag-and-drop a set of files to process onto this script's icon")
+    print("Supported file types:")
+    print("- First segment of a forensic image")
+    print("- Any number of native files")
+    print("Note: The Processing Engine must have access to all paths listed.")
+    os.system("pause")
+    raise SystemExit
 
 # Connection test
 if EntAPICommon.IsApiUp(APIhostname):
@@ -58,8 +72,8 @@ print()
 choice = ''
 while choice not in ['1','2']:
     print("Choose from the following:")
-    print("1 - Process into a new case")
-    print("2 - Process into an existing case")
+    print("1 - Create a new case")
+    print("2 - Use an existing case")
     choice = input("Enter 1 or 2: ")
     if choice not in ['1','2']:
         print("Invalid selection!")
@@ -67,32 +81,27 @@ while choice not in ['1','2']:
 if choice == '1':
     # Prompt for a case name
     print()
-    print("Case data will be stored at '%s'" % ProjectData)
+    print("Case data will be stored at '%s'" % ProjectDataPath)
     CaseName = input("Enter your desired case name: ")
 
     # Create the case and get the CaseID
-    # TODO: Get the CaseID for an existing case
     print()
     print("Creating case '%s'..." % CaseName)
-    ProjectData = ProjectData + "\\" + CaseName
-    JobData = ProjectData + "\\JobData"
+    ProjectDataPath = ProjectDataPath + "\\" + CaseName
+    JobDataPath = ProjectDataPath + "\\JobData"
 
-    if not os.path.exists(ProjectData):
-        os.makedirs(ProjectData)
+    if not os.path.exists(ProjectDataPath):
+        os.makedirs(ProjectDataPath)
 
-    if not os.path.exists(JobData):
-        os.makedirs(JobData)
-
-    createcaseDefinition = {
-    "name": CaseName,
-    "ftkCaseFolderPath": ProjectData,
-    "responsiveFilePath": JobData,
-    "processingMode": 2
-    }
+    createcaseDefinition = EntAPICommon.FileToJSON(CreateCaseDefinitionFile)
+    createcaseDefinition["name"] = CaseName
+    createcaseDefinition["ftkCaseFolderPath"] = ProjectDataPath
+    createcaseDefinition["responsiveFilePath"] = JobDataPath
+    createcaseDefinition["processingMode"] = 2
 
     CaseID = EntAPICommon.CreateCase(APIkey, APIhostname, createcaseDefinition)
     print("Case ID: %s" % CaseID)
-    print("Project folder: %s" % ProjectData)
+    print("Project folder: %s" % ProjectDataPath)
 elif choice == '2':
     print()
     CaseID = input("Enter the desired case's Case ID: ")
