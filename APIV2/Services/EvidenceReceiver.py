@@ -1,4 +1,4 @@
-# Version: .4, use external definition
+# Version: .5, folder of natives works
 # Date: 5/17/2019
 #
 # In Windows Explorer, drag-and-drop a set of files onto this script's icon
@@ -34,6 +34,7 @@ if len(sys.argv) == 1:
     print("Supported file types:")
     print("- First segment of a forensic image")
     print("- Any number of native files")
+    print("- A folder of native files")
     print("Note: The Processing Engine must have access to all paths listed.")
     os.system("pause")
     raise SystemExit
@@ -64,6 +65,7 @@ print("Please review the items listed before continuing.")
 print("Supported file types:")
 print("- First segment of a forensic image")
 print("- Individual native files")
+print("- A folder of native files")
 print("Note: The Processing Engine must have access to all paths listed.")
 os.system("pause")
 
