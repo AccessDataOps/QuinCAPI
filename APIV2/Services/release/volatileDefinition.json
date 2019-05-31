@@ -1,0 +1,80 @@
+# Comments are included to understand the parameters in the API operation
+# Proper JSON doesn't allow for comments
+# The FileToJSON function in EntAPICommon.py will remove all single-line comments when reading this
+{
+  "volatile": {
+    "includeProcessTree": false, # false/false, gets Process Info
+    "processTreeOptions": {
+      "detectHiddenProcesses": false, # false/false, gets Hidden Processes, requires includeProcessTree
+      "includeDlls": false, # false/false, gets open DLL Info, requires includeProcessTree
+      "dllOptions": {
+        "detectInjectedDlls": false # false/false, gets Injected DLLs, requires includeDlls
+      },
+      "includeSockets": false, # false/false, gets Network Sockets, requires includeProcessTree
+      "includeHandles": false, # false/false, gets Open Handles, requires includeProcessTree
+      "mergeWithMemoryAnalysis": false,
+      "includeJamScore": false,
+      "includeStaticAnalysis": false
+    },
+    "includeServices": false, # false/false, gets Services Info
+    "includeJamServices": false,
+    "includeDrivers": false, # false/false, gets Driver Info
+    "includeJamDrivers": false,
+    "includeUsers": false, # false/false, gets User Info
+    "includeNICs": false, # false/false, gets Network Devices
+    "includeSMBSessions": false,
+    "includeArp": false,
+    "includeRouting": false,
+    "includeDNSCache": false,
+    "includePrefetch": false,
+    "includeVolume": false,
+    "includeUsb": false,
+    "includeLiveRegistry": false,
+    "includeTasks": false,
+    "includeJamTasks": false,
+    "includeCertificates": false,
+    "liveRegistryList": [
+      {
+        "x32": false,
+        "x64": false,
+        "displayName": "string",
+        "path": "string",
+        "depth": 0
+      }
+    ],
+    "includeRegistryKeys": false,
+    "registryKeyList": [
+      {
+        "x32": false,
+        "x64": false,
+        "displayName": "string",
+        "path": "string",
+        "depth": 0
+      }
+    ],
+    "useScheduling": false, # false/false, enables job scheduling
+    "schedulingOptions": {
+      "runAtASpecificTime": false, # false/false, enable starting the job at a specific time, requires useScheduling
+      "runTime": "2019-05-10T22:05:00.000Z", # timestamp, desired start time in UTC for first job, requires runAtASpecificTime
+      "runIntervalInMinutes": 0,
+      "runUntilEndTime": false,
+      "runCount": 1,
+      "endTime": "2019-05-06T16:48:50.534Z"
+    },
+    "enableRemediation": false,
+    "remediationOptions": {
+      "_commands": [
+        {}
+      ],
+      "hashes": [
+        "string"
+      ]
+    },
+    "operation": 0
+  },
+  "ips": {
+    "targets": [
+      "string" # string, target hostname or IP
+    ]
+  }
+}
