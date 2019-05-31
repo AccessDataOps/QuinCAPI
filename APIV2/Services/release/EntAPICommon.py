@@ -142,7 +142,7 @@ def SoftwareInventoryJob(CaseID, definition):
 # Copies the XML files for a job into a more accessible location
 # Returns string showing where the reports are
 def CopyJobReports(CaseID, JobID, ReportsPath):
-    jobinfo = GetJobInfo(APIkey, APIhostname, CaseID, JobID)
+    jobinfo = GetJobInfo(CaseID, JobID)
     # Get the Target Name and list of ResultFiles from the job info
     target = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Details"]["Name"]
     resultfiles = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Results"][1]["ResultFileLocation"]
