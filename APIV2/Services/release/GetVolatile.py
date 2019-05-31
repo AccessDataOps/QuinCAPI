@@ -83,6 +83,7 @@ elif choice == '2':
     raise SystemExit
   else:
     print("Using case '%s'" % casename)
+    print("Project folder: %s" % casepath)
     ReportsPath = os.path.dirname(casepath) + "\\Reports"
 
 # Prompt you for a target IP
