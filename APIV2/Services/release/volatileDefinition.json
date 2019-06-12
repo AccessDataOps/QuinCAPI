@@ -3,25 +3,25 @@
 # The FileToJSON function in EntAPICommon.py will remove all single-line comments when reading this
 {
   "volatile": {
-    "includeProcessTree": false, # false/false, gets Process Info
+    "includeProcessTree": false, # true/false, gets Process Info
     "processTreeOptions": {
-      "detectHiddenProcesses": false, # false/false, gets Hidden Processes, requires includeProcessTree
-      "includeDlls": false, # false/false, gets open DLL Info, requires includeProcessTree
+      "detectHiddenProcesses": false, # true/false, gets Hidden Processes, requires includeProcessTree
+      "includeDlls": false, # true/false, gets open DLL Info, requires includeProcessTree
       "dllOptions": {
-        "detectInjectedDlls": false # false/false, gets Injected DLLs, requires includeDlls
+        "detectInjectedDlls": false # true/false, gets Injected DLLs, requires includeDlls
       },
-      "includeSockets": false, # false/false, gets Network Sockets, requires includeProcessTree
-      "includeHandles": false, # false/false, gets Open Handles, requires includeProcessTree
+      "includeSockets": false, # true/false, gets Network Sockets, requires includeProcessTree
+      "includeHandles": false, # true/false, gets Open Handles, requires includeProcessTree
       "mergeWithMemoryAnalysis": false,
       "includeJamScore": false,
       "includeStaticAnalysis": false
     },
-    "includeServices": false, # false/false, gets Services Info
+    "includeServices": false, # true/false, gets Services Info
     "includeJamServices": false,
-    "includeDrivers": false, # false/false, gets Driver Info
+    "includeDrivers": false, # true/false, gets Driver Info
     "includeJamDrivers": false,
-    "includeUsers": false, # false/false, gets User Info
-    "includeNICs": false, # false/false, gets Network Devices
+    "includeUsers": false, # true/false, gets User Info
+    "includeNICs": false, # true/false, gets Network Devices
     "includeSMBSessions": false,
     "includeArp": false,
     "includeRouting": false,
@@ -52,9 +52,9 @@
         "depth": 0
       }
     ],
-    "useScheduling": false, # false/false, enables job scheduling
+    "useScheduling": false, # true/false, enables job scheduling
     "schedulingOptions": {
-      "runAtASpecificTime": false, # false/false, enable starting the job at a specific time, requires useScheduling
+      "runAtASpecificTime": false, # true/false, enable starting the job at a specific time, requires useScheduling
       "runTime": "2019-05-10T22:05:00.000Z", # timestamp, desired start time in UTC for first job, requires runAtASpecificTime
       "runIntervalInMinutes": 0,
       "runUntilEndTime": false,

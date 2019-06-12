@@ -1,5 +1,5 @@
-# Version: 1, APIkey and APIhostname are now in this script so that don't have to be duplicated in other scripts
-# Date: 5/31/2019
+# Version: 1.1, added MemoryAcquisition
+# Date: 6/12/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
@@ -165,3 +165,9 @@ def CopyJobReports(CaseID, JobID, ReportsPath):
 def GetCaseList():
     response = requests.get('http://' + APIhostname + ':4443/api/v2/enterpriseapi/getcaselist',headers = {'EnterpriseApiKey': APIkey})
     return json.loads(response.text)
+
+# Runs a memory acquisition
+# Returns new Job ID
+def MemoryAcquisition(CaseID, definition):
+    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/'+str(CaseID)+'/memoryacquistion',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    return response.content.decode("utf-8")
