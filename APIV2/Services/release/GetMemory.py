@@ -126,5 +126,4 @@ else:
 
 print("Memory dump is stored in '%s'" % myfile)
 print("Please use Evidence > Import Memory Dump to parse the data")
-
 os.system("pause")
