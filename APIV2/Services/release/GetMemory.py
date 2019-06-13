@@ -1,5 +1,5 @@
-# Version: .1
-# Date: 6/12/2019
+# Version: .2, fixes reporting image path
+# Date: 6/13/2019
 #
 # This script will do the following:
 # 1. Prompt to create a new case or use an existing one
@@ -123,6 +123,12 @@ else:
   print("Job %s experienced an error and cannot proceed." % JobID)
   os.system("pause")
   raise SystemExit
+
+resultfiles = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Results"][2]["ResultFileLocation"]
+for resultfile in resultfiles:
+    if resultfile["FilePath"].lower().endswith(('.ad1', '.mem')):
+        myfile = resultfile["FilePath"]
+        break
 
 print("Memory dump is stored in '%s'" % myfile)
 print("Please use Evidence > Import Memory Dump to parse the data")
