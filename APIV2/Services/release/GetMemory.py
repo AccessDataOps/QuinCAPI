@@ -1,4 +1,4 @@
-# Version: .2, fixes reporting image path
+# Version: .3, move final image
 # Date: 6/13/2019
 #
 # This script will do the following:
@@ -20,8 +20,8 @@ import EntAPICommon
 
 # UPDATE THESE
 ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
-CreateCaseDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\release\\createcaseDefinition.json" # File with the definition settings to use
-MemoryAquisitionDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\release\\memoryacquisitionDefinition.json" # File with the definition settings to use
+CreateCaseDefinitionFile = "C:\\Users\\svc\\Desktop\\GitHub\\QuinCAPI\\APIV2\\Services\\release\\createcaseDefinition.json" # File with the definition settings to use
+MemoryAquisitionDefinitionFile = "C:\\Users\\svc\\Desktop\\GitHub\\QuinCAPI\\APIV2\\Services\\release\\memoryacquisitionDefinition.json" # File with the definition settings to use
 
 # Connection test
 if not EntAPICommon.IsApiUp():
@@ -83,6 +83,7 @@ elif choice == '2':
   else:
     print("Using case '%s'" % casename)
     print("Project folder: %s" % casepath)
+    JobDataPath = os.path.dirname(casepath) + "\\JobData"
     ReportsPath = os.path.dirname(casepath) + "\\Reports"
 
 # Prompt you for a target IP
@@ -126,10 +127,24 @@ else:
 
 resultfiles = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Results"][2]["ResultFileLocation"]
 for resultfile in resultfiles:
-    if resultfile["FilePath"].lower().endswith(('.ad1', '.mem')):
-        myfile = resultfile["FilePath"]
-        break
+  if resultfile["FilePath"].lower().endswith(('.ad1', '.mem')):
+    myfile = resultfile["FilePath"]
+    break
 
-print("Memory dump is stored in '%s'" % myfile)
+if not os.path.exists(JobDataPath):
+  os.makedirs(JobDataPath)
+
+targetname = jobinfo["resultData"]["RealData"]["TaskStatusList"][0]["Details"]["Name"]
+starttime = datetime.strptime(jobinfo["startDate"], '%Y-%m-%dT%H:%M:%S.%f') # Parse the job info timestamp to something Python understands
+utctime = starttime.strftime("%Y%m%d%H%M%SUTC")
+jobresults = os.path.dirname(myfile)
+
+for file in os.listdir(jobresults):
+  ext = os.path.splitext(file)[1]
+  oldname = os.path.join(jobresults,file)
+  newname = os.path.join(JobDataPath,targetname + "_" + utctime + "_memdump" + ext)
+  os.rename(oldname, newname)
+print("Memory dump is stored in '%s'" % JobDataPath)
+
 print("Please use Evidence > Import Memory Dump to parse the data")
 os.system("pause")

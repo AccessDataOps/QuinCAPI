@@ -3,8 +3,8 @@
 # The FileToJSON function in EntAPICommon.py will remove all single-line comments when reading this
 {
   "memoryAcquistion": {
-    "includePagefile": false, # true/false, includes paging file
-    "createAD1": true # true/false, false creates a MEM file, true packages the MEM in an AD1
+    "includePagefile": true, # true/false, includes paging file, typically needed for proper processing
+    "createAD1": true # true/false, false creates a MEM file, true packages the MEM in an AD1, must be true (bug)
   },
   "ips": {
     "targets": [
