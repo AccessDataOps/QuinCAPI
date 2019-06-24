@@ -1,5 +1,5 @@
-# Version: .1
-# Date: 6/12/2019
+# Version: .2, relative JSON paths
+# Date: 6/23/2019
 #
 # This script will do the following:
 # 1. Prompt to create a new case or use an existing one
@@ -20,8 +20,10 @@ import EntAPICommon
 
 # UPDATE THESE
 ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
-CreateCaseDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\release\\createcaseDefinition.json" # File with the definition settings to use
-MemoryAquisitionDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\release\\memoryacquisitionDefinition.json" # File with the definition settings to use
+
+scriptfolder = os.path.abspath(os.path.dirname(__file__))
+CreateCaseDefinitionFile = os.path.join(scriptfolder, "createcaseDefinition.json") # File with the definition settings to use
+MemoryAquisitionDefinitionFile = os.path.join(scriptfolder, "memoryacquisitionDefinition.json") # File with the definition settings to use
 
 # Connection test
 if not EntAPICommon.IsApiUp():
