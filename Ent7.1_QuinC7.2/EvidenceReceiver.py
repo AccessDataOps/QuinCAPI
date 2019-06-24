@@ -1,5 +1,5 @@
-# Version: .8, key and host are now in EntAPICommon.py, can now use existing cases regardless of DB type
-# Date: 6/6/2019
+# Version: .9, relative JSON paths
+# Date: 6/23/2019
 #
 # In Windows Explorer, drag-and-drop a set of files onto this script's icon
 # This script will do the following:
@@ -25,7 +25,9 @@ import sys
 
 # UPDATE THESE
 ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
-CreateCaseDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\createcaseDefinition.json" # File with the definition settings to use
+
+scriptfolder = os.path.abspath(os.path.dirname(__file__))
+CreateCaseDefinitionFile = os.path.join(scriptfolder, "createcaseDefinition.json") # File with the definition settings to use
 
 if len(sys.argv) == 1:
     print("Usage:")

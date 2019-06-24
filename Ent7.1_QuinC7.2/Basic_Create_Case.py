@@ -12,5 +12,5 @@ createcase = {
 "FTKCaseFolderPath": casepath
 }
 
-resp = requests.post('http://'+apihost+':4443/api/v2/enterpriseapi/createcase',createcase,headers=headers)
+resp = requests.post('http://'+apihost+':4443/api/v2/enterpriseapi/core/createcase',createcase,headers=headers)
 print('Created case %s' % resp.text)

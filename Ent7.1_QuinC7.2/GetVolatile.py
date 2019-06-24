@@ -1,5 +1,5 @@
-# Version: .9, key and host are now in EntAPICommon.py, can now use existing cases regardless of DB type
-# Date: 5/31/2019
+# Version: 1.0, relative JSON paths
+# Date: 6/23/2019
 #
 # This script will do the following:
 # 1. Prompt to create a new case or use an existing one
@@ -21,8 +21,10 @@ import EntAPICommon
 
 # UPDATE THESE
 ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
-CreateCaseDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\release\\createcaseDefinition.json" # File with the definition settings to use
-VolatileDefinitionFile = "C:\\Users\\svc\\Desktop\\scripts\\Services\\release\\volatileDefinition.json" # File with the definition settings to use
+
+scriptfolder = os.path.abspath(os.path.dirname(__file__))
+CreateCaseDefinitionFile = os.path.join(scriptfolder, "createcaseDefinition.json") # File with the definition settings to use
+VolatileDefinitionFile = os.path.join(scriptfolder, "volatileDefinition.json") # File with the definition settings to use
 
 # Connection test
 if not EntAPICommon.IsApiUp():
