@@ -1,5 +1,5 @@
-# Version: 1.2, updated for Quin-C 7.2
-# Date: 6/24/2019
+# Version: 1.3, missing some ORs in regex
+# Date: 6/26/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
@@ -83,7 +83,7 @@ def AddVolatile(CaseID, JobID):
 # Returns evidence type as an integer
 def DetectEvidenceType(path):
     # Check if path ends in an extension matching a supported image type
-    if (re.search('(\.ad1|\.e01|\.ex01|\.l01|\.lx01|\.aff|\.vhd|\.nrg|\.s01\.001\.1|\.bin|\.cue|\.dd|\.dmg|\.ima|\.img|\.iso|\.raw|\.vmdk|\.vdi|\.mds|\.ccd|\.pxi|\.vc4|\.yaffs1|\.yaffs2)$', path.lower())):
+    if (re.search('(\.ad1|\.e01|\.ex01|\.l01|\.lx01|\.aff|\.vhd|\.nrg|\.s01|\.001|\.1|\.bin|\.cue|\.dd|\.dmg|\.ima|\.img|\.iso|\.raw|\.vmdk|\.vdi|\.mds|\.ccd|\.pxi|\.vc4|\.yaffs1|\.yaffs2)$', path.lower())):
         evidencetype = 2
     # Check if path is a non-image file
     elif (re.search('(\..{1,3})$', path)):
