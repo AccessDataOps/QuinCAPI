@@ -1,7 +1,7 @@
 import requests
 
 apihost = "WIN-B3VKJBVM6RQ"
-apikey = "c45a22c3-8da7-49ee-929b-ab6185fa90e4"
+apikey = "fe1245f3-f385-407e-9184-70f7b1720890"
 casename = "API Script Case"
 casepath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData"
 

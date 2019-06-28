@@ -25,20 +25,23 @@ import sys
 
 # UPDATE THESE
 ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
+ProcessingProfileXML = "ForensicProcessing.xml" # XML file with the full processing options desired
+CreateCaseDefinitionJSON = "createcaseDefinition.json" # JSON file with the operation definition settings to use
 
-scriptfolder = os.path.abspath(os.path.dirname(__file__))
-CreateCaseDefinitionFile = os.path.join(scriptfolder, "createcaseDefinition.json") # File with the definition settings to use
+ScriptFolder = os.path.abspath(os.path.dirname(__file__))
+ProcessingProfileFile = os.path.join(ScriptFolder, "Processing Profiles", ProcessingProfileXML)
+CreateCaseDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", CreateCaseDefinitionJSON)
 
 if len(sys.argv) == 1:
-    print("Usage:")
-    print("In Windows Explorer, drag-and-drop a set of files to process onto this script's icon")
-    print("Supported file types:")
-    print("- First segment of a forensic image")
-    print("- Any number of native files")
-    print("- A folder of native files")
-    print("Note: The Processing Engine must have access to all paths listed.")
-    os.system("pause")
-    raise SystemExit
+  print("Usage:")
+  print("In Windows Explorer, drag-and-drop a set of files to process onto this script's icon")
+  print("Supported file types:")
+  print("- First segment of a forensic image")
+  print("- Any number of native files")
+  print("- A folder of native files")
+  print("Note: The Processing Engine must have access to all paths listed.")
+  os.system("pause")
+  raise SystemExit
 
 # Connection test
 if not EntAPICommon.IsApiUp():
@@ -49,13 +52,13 @@ if not EntAPICommon.IsApiUp():
 print()
 items = []
 for i in range(1,len(sys.argv)):
-    items.append(sys.argv[i])
+  items.append(sys.argv[i])
 # Sort for easier to read output
 items.sort()
 
 print("Items to process: ")
 for item in items:
-    print(item)
+  print(item)
 
 print()
 print("Please review the items listed before continuing.")
@@ -127,27 +130,30 @@ elif choice == '2':
 # If we detect a first image segment, we'll process its image
 # Otherwise, treat everything as natives
 print()
+completeProcessingOptions = EntAPICommon.FileToString(ProcessingProfileFile)
 for item in items:
-    EvidenceType = EntAPICommon.DetectEvidenceType(item)
-    if EvidenceType == 2:
-        definition = {
-            "evidenceToCreate": {
-                "evidenceType": EvidenceType,
-                "evidencePath": item
-            }
-        }
-        print("Started processing image '%s'" % item)
-        print(EntAPICommon.AddEvidence(CaseID, definition))
-    elif EvidenceType == 0:
-        definition = {
-            "evidenceToCreate": {
-                "evidenceType": EvidenceType,
-                "evidencePath": item
-            }
-        }
-        print("Started processing native '%s'" % item)
-        print(EntAPICommon.AddEvidence(CaseID, definition))    
-    else:
-        print("I do not know how to handle that evidence.")
+  EvidenceType = EntAPICommon.DetectEvidenceType(item)
+  if EvidenceType == 2:
+    definition = {
+      "evidenceToCreate": {
+        "evidenceType": EvidenceType,
+        "evidencePath": item
+      },
+      "completeProcessingOptions": completeProcessingOptions
+    }
+    print("Started processing image '%s'" % item)
+    print(EntAPICommon.AddEvidence(CaseID, definition))
+  elif EvidenceType == 0:
+    definition = {
+      "evidenceToCreate": {
+        "evidenceType": EvidenceType,
+        "evidencePath": item
+      },
+      "completeProcessingOptions": completeProcessingOptions
+    }
+    print("Started processing native '%s'" % item)
+    print(EntAPICommon.AddEvidence(CaseID, definition))    
+  else:
+    print("I do not know how to handle that evidence.")
 print("Monitor job progress by opening case %s and going to View > Progress Window" % CaseID)
 os.system("pause")

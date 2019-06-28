@@ -1,5 +1,5 @@
-# Version: 1.0, relative JSON paths
-# Date: 6/23/2019
+# Version: 1.1, changed JSON folder
+# Date: 6/27/2019
 #
 # This script will do the following:
 # 1. Prompt to create a new case or use an existing one
@@ -21,10 +21,12 @@ import EntAPICommon
 
 # UPDATE THESE
 ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
+CreateCaseDefinitionJSON = "createcaseDefinition.json" # JSON file with the operation definition settings to use
+VolatileDefinitionJSON = "volatileDefinition.json" # JSON file with the operation definition settings to use
 
-scriptfolder = os.path.abspath(os.path.dirname(__file__))
-CreateCaseDefinitionFile = os.path.join(scriptfolder, "createcaseDefinition.json") # File with the definition settings to use
-VolatileDefinitionFile = os.path.join(scriptfolder, "volatileDefinition.json") # File with the definition settings to use
+ScriptFolder = os.path.abspath(os.path.dirname(__file__))
+CreateCaseDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", CreateCaseDefinitionJSON)
+VolatileDefinitionFile = os.path.join(scriptfolder, "Operation Definitions", VolatileDefinitionJSON)
 
 # Connection test
 if not EntAPICommon.IsApiUp():
