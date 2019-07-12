@@ -25,7 +25,7 @@ MemoryAquisitionDefinitionJSON = "memoryacquisitionDefinition.json"  # JSON file
 
 ScriptFolder = os.path.abspath(os.path.dirname(__file__))
 CreateCaseDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", CreateCaseDefinitionJSON)
-MemoryAquisitionDefinitionFile = os.path.join(scriptfolder, "Operation Definitions", MemoryAquisitionDefinitionJSON)
+MemoryAquisitionDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", MemoryAquisitionDefinitionJSON)
 
 # Connection test
 if not EntAPICommon.IsApiUp():

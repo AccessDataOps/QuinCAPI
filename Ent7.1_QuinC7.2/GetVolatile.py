@@ -26,7 +26,7 @@ VolatileDefinitionJSON = "volatileDefinition.json" # JSON file with the operatio
 
 ScriptFolder = os.path.abspath(os.path.dirname(__file__))
 CreateCaseDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", CreateCaseDefinitionJSON)
-VolatileDefinitionFile = os.path.join(scriptfolder, "Operation Definitions", VolatileDefinitionJSON)
+VolatileDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", VolatileDefinitionJSON)
 
 # Connection test
 if not EntAPICommon.IsApiUp():

@@ -1,12 +1,14 @@
-# Version: 1.3, added FileToString
-# Date: 6/27/2019
+# Version: 1.4, added support for SSL and custom ports in Quin-C
+# Date: 7/12/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
 # Make sure to set the APIkey and APIhostname values, as they will be referenced by all API commands contained here
 
-APIkey = "fe1245f3-f385-407e-9184-70f7b1720890" # Generated in Enterprise via Tools > Access API Key
+APIkey = "92a1ad1a-7153-44bc-b4a8-a9e4fdfc5b40" # Generated in Enterprise via Tools > Access API Key
 APIhostname = "WIN-B3VKJBVM6RQ" # Machine (name or IP) running Enterprise and Quin-C Self Host Service
+APIport = 4443 # Port Quin-C is running on
+SSL = True # Whether or not SSL/HTTPS is enabled in Quin-C
 
 ########## DON'T TOUCH ##########
 
@@ -20,6 +22,15 @@ import os
 import time
 from datetime import datetime
 from shutil import copyfile
+
+# Form the base URL
+if SSL:
+    baseURL = "https://%s:%s" % (APIhostname, APIport)
+else:
+    baseURL = "http://%s:%s" % (APIhostname, APIport)
+
+# Ignore SSL warnings
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 # Clean and properly parse the response content from the 'getjobstatus' operation
 # Returns a properly formatted Python dictionary
@@ -38,7 +49,7 @@ def CleanResponse(text):
 def IsApiUp():
     print("Checking API status on %s..." % APIhostname)
     try:
-        response = requests.get("http://" + APIhostname + ":4443/api/v2/enterpriseapi/statuscheck")
+        response = requests.get(baseURL + '/api/v2/enterpriseapi/statuscheck', verify=False)
         if (response.reason == "OK"):
             print("OK")
             return True
@@ -54,25 +65,25 @@ def IsApiUp():
 # Gets all info about a job
 # Returns reponse content (job info) as a Python dictionary
 def GetJobInfo(CaseID, JobID):
-    response = requests.get('http://' + APIhostname + ':4443/api/v2/enterpriseapi/core/'+str(CaseID)+'/getjobstatus/'+str(JobID),headers = {'EnterpriseApiKey': APIkey})
+    response = requests.get(baseURL + '/api/v2/enterpriseapi/core/'+str(CaseID)+'/getjobstatus/'+str(JobID),headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return CleanResponse(response.text)
 
 # Creates a new case
 # Returns new Case ID
 def CreateCase(definition):
-    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/core/createcase',definition,headers = {'EnterpriseApiKey': APIkey})
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/core/createcase',definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.content.decode("utf-8")
 
 # Runs a volatile job
 # Returns new Job ID
 def VolatileJob(CaseID, definition):
-    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/agent/'+str(CaseID)+'/volatile',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/agent/'+str(CaseID)+'/volatile',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.content.decode("utf-8")
 
 # Adds data from a volatile job to a case
 # Returns status
 def AddVolatile(CaseID, JobID):
-    response = requests.get('http://' + APIhostname + ':4443/api/v2/enterpriseapi/agent/'+str(CaseID)+'/importvolatile/'+str(JobID),headers = {'EnterpriseApiKey': APIkey})
+    response = requests.get(baseURL + '/api/v2/enterpriseapi/agent/'+str(CaseID)+'/importvolatile/'+str(JobID),headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.reason
 
 # Detects evidence type based on a given path
@@ -104,7 +115,7 @@ def DetectEvidenceType(path):
 # Processes evidence (image or native)
 # Returns status
 def AddEvidence(CaseID, definition):
-    response = requests.post('http://'+APIhostname+':4443/api/v2/enterpriseapi/core/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    response = requests.post('https://'+APIhostname+':4443/api/v2/enterpriseapi/core/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.reason
 
 # Checks if a target is listening on a specified port
@@ -122,7 +133,7 @@ def IsPortListening(IP, Port):
 # Runs a collection job, storing the results on the target
 # Returns new Job ID
 def CollectionOnAgent(CaseID, definition):
-    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/agent/'+str(CaseID)+'/collectiononagent',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/agent/'+str(CaseID)+'/collectiononagent',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.content.decode("utf-8")
 
 # JSON doesn't allow comments, so this strips comments out when reading in a JSON-formatted definition
@@ -136,7 +147,7 @@ def FileToJSON(DefinitionFile):
 # Runs a software inventory job
 # Returns new Job ID
 def SoftwareInventoryJob(CaseID, definition):
-    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/agent/'+str(CaseID)+'/sofwareinventory',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/agent/'+str(CaseID)+'/sofwareinventory',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.content.decode("utf-8")
 
 # Copies the XML files for a job into a more accessible location
@@ -163,13 +174,13 @@ def CopyJobReports(CaseID, JobID, ReportsPath):
 # Gets information about all existing cases
 # Returns a list of dictionaries
 def GetCaseList():
-    response = requests.get('http://' + APIhostname + ':4443/api/v2/enterpriseapi/core/getcaselist',headers = {'EnterpriseApiKey': APIkey})
+    response = requests.get(baseURL + '/api/v2/enterpriseapi/core/getcaselist',headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return json.loads(response.text)
 
 # Runs a memory acquisition
 # Returns new Job ID
 def MemoryAcquisition(CaseID, definition):
-    response = requests.post('http://' + APIhostname + ':4443/api/v2/enterpriseapi/agent/'+str(CaseID)+'/memoryacquistion',json = definition,headers = {'EnterpriseApiKey': APIkey})
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/agent/'+str(CaseID)+'/memoryacquistion',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.content.decode("utf-8")
 
 # Reads the full contents of a file
@@ -178,3 +189,9 @@ def FileToString(FilePath):
     with open(FilePath, 'r') as file:
         filedata = file.read()
     return filedata
+
+# Pushes an Agent
+# Returns response
+def PushAgent(CaseID, definition):
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/agent/'+str(CaseID)+'/runagentpush',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
+    return response
