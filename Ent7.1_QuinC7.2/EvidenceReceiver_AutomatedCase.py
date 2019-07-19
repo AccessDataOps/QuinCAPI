@@ -1,9 +1,9 @@
-# Version: .9, relative JSON paths
-# Date: 6/23/2019
+# Version: .1
+# Date: 7/19/2019
 #
 # In Windows Explorer, drag-and-drop a set of files onto this script's icon
 # This script will do the following:
-# 1. Prompt to create a new case or use an existing one
+# 1. Automatically create a case by evidence name and timestamp
 # 2. Attempt to identify the type of evidence dropped on the script
 # 3. Process the evidence into the specified case
 #
