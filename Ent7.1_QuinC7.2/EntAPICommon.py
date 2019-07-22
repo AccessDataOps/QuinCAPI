@@ -1,5 +1,5 @@
-# Version: 1.4, added support for SSL and custom ports in Quin-C
-# Date: 7/12/2019
+# Version: 1.5, removed unused import
+# Date: 7/22/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
@@ -16,7 +16,6 @@ import requests
 import json
 import re
 from requests.exceptions import ConnectionError
-import pyodbc
 import socket
 import os
 import time
