@@ -1,5 +1,5 @@
-# Version: 1.5, removed unused import
-# Date: 7/22/2019
+# Version: 1.6, fixed AddEvidence URL
+# Date: 7/31/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
@@ -114,7 +114,7 @@ def DetectEvidenceType(path):
 # Processes evidence (image or native)
 # Returns status
 def AddEvidence(CaseID, definition):
-    response = requests.post('https://'+APIhostname+':4443/api/v2/enterpriseapi/core/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/core/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.reason
 
 # Checks if a target is listening on a specified port
