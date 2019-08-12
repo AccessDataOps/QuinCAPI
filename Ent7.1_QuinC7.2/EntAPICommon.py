@@ -1,14 +1,9 @@
-# Version: 1.5, removed unused import
-# Date: 7/22/2019
+# Version: 1.6, using common variable file
+# Date: 8/12/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
-# Make sure to set the APIkey and APIhostname values, as they will be referenced by all API commands contained here
-
-APIkey = "92a1ad1a-7153-44bc-b4a8-a9e4fdfc5b40" # Generated in Enterprise via Tools > Access API Key
-APIhostname = "WIN-B3VKJBVM6RQ" # Machine (name or IP) running Enterprise and Quin-C Self Host Service
-APIport = 4443 # Port Quin-C is running on
-SSL = True # Whether or not SSL/HTTPS is enabled in Quin-C
+# Make sure to set all variables in commonVars.py
 
 ########## DON'T TOUCH ##########
 
@@ -21,6 +16,7 @@ import os
 import time
 from datetime import datetime
 from shutil import copyfile
+from commonVars import *
 
 # Form the base URL
 if SSL:
@@ -54,7 +50,10 @@ def IsApiUp():
             return True
         else:
             print("Failed")
-            print("Make sure the 'Quin-C Self Host Service' is running on %s" % APIhostname)
+            print("Hostname: %s" % APIhostname)
+            print("Port: %s" % APIPort)
+            print("Using SSL/HTTPS: %s" % SSL)
+            print("Make sure the above is set correctly and 'Quin-C Self Host Service' is running on %s" % APIhostname)
             return False
     except ConnectionError: # Suppress full traceback
         print("Failed")
@@ -194,3 +193,14 @@ def FileToString(FilePath):
 def PushAgent(CaseID, definition):
     response = requests.post(baseURL + '/api/v2/enterpriseapi/agent/'+str(CaseID)+'/runagentpush',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response
+
+# Checks if a path is UNC
+# Returns True or False
+def IsUNC(mypath):
+    if (mypath.startswith(r'\\')):
+        return True
+    else:
+        print()
+        print("All paths must be in UNC format")
+        print("'%s' is not in UNC format." % mypath)
+        return False

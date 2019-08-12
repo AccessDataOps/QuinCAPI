@@ -1,2 +1,6 @@
 import os
-print(os.path.splitext(os.path.basename("/path/to/some/file.txt"))[0])
+
+ProjectDataPath = "C:/WIN-B3VKJBVM6RQ/AccessData/ProjectData"
+
+ProjectDataPath = os.path.normpath(ProjectDataPath)
+print(ProjectDataPath.startswith(r'\\'))

@@ -1,5 +1,5 @@
-# Version: .1
-# Date: 7/19/2019
+# Version: .2, using common variable file, check for UNC paths
+# Date: 8/12/2019
 #
 # In Windows Explorer, drag-and-drop a set of files onto this script's icon
 # This script will do the following:
@@ -22,12 +22,13 @@ from datetime import datetime
 from shutil import copyfile
 import EntAPICommon
 import sys
+from commonVars import *
 
 # UPDATE THESE
-ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
 ProcessingProfileXML = "ForensicProcessing.xml" # XML file with the full processing options desired
 CreateCaseDefinitionJSON = "createcaseDefinition.json" # JSON file with the operation definition settings to use
 
+ProjectDataPath = os.path.normpath(ProjectDataPath)
 ScriptFolder = os.path.abspath(os.path.dirname(__file__))
 ProcessingProfileFile = os.path.join(ScriptFolder, "Processing Profiles", ProcessingProfileXML)
 CreateCaseDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", CreateCaseDefinitionJSON)
@@ -48,11 +49,20 @@ if not EntAPICommon.IsApiUp():
   os.system("pause")
   raise SystemExit
 
+# Make sure project path in UNC
+if not EntAPICommon.IsUNC(ProjectDataPath):
+  os.system("pause")
+  raise SystemExit
+
 # Grab a list of all the item dropped onto the script
 print()
 items = []
 for i in range(1,len(sys.argv)):
-  items.append(sys.argv[i])
+  if EntAPICommon.IsUNC(sys.argv[i]):
+    items.append(sys.argv[i])
+  else:
+    os.system("pause")
+    raise SystemExit
 # Sort for easier to read output
 items.sort()
 

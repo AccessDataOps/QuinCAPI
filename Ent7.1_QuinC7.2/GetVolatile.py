@@ -1,5 +1,5 @@
-# Version: 1.1, changed JSON folder
-# Date: 6/27/2019
+# Version: 1.2, using common variable file, check for UNC paths
+# Date: 8/12/2019
 #
 # This script will do the following:
 # 1. Prompt to create a new case or use an existing one
@@ -18,18 +18,24 @@ import time
 from datetime import datetime
 from shutil import copyfile
 import EntAPICommon
+from commonVars import *
 
 # UPDATE THESE
-ProjectDataPath = "\\\\WIN-B3VKJBVM6RQ\\AccessData\\ProjectData" # Default case data path, make sure to escape any backslashes
 CreateCaseDefinitionJSON = "createcaseDefinition.json" # JSON file with the operation definition settings to use
 VolatileDefinitionJSON = "volatileDefinition.json" # JSON file with the operation definition settings to use
 
+ProjectDataPath = os.path.normpath(ProjectDataPath)
 ScriptFolder = os.path.abspath(os.path.dirname(__file__))
 CreateCaseDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", CreateCaseDefinitionJSON)
 VolatileDefinitionFile = os.path.join(ScriptFolder, "Operation Definitions", VolatileDefinitionJSON)
 
 # Connection test
 if not EntAPICommon.IsApiUp():
+  os.system("pause")
+  raise SystemExit
+
+# Make sure project path in UNC
+if not EntAPICommon.IsUNC(ProjectDataPath):
   os.system("pause")
   raise SystemExit
 
