@@ -113,7 +113,7 @@ def DetectEvidenceType(path):
 # Processes evidence (image or native)
 # Returns status
 def AddEvidence(CaseID, definition):
-    response = requests.post('https://'+APIhostname+':4443/api/v2/enterpriseapi/core/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
+    response = requests.post(baseURL + '/api/v2/enterpriseapi/core/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
     return response.reason
 
 # Checks if a target is listening on a specified port
