@@ -1,5 +1,5 @@
-# Version: 1.6, using common variable file
-# Date: 8/12/2019
+# Version: 1.7, typo
+# Date: 8/16/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
@@ -51,7 +51,7 @@ def IsApiUp():
         else:
             print("Failed")
             print("Hostname: %s" % APIhostname)
-            print("Port: %s" % APIPort)
+            print("Port: %s" % APIport)
             print("Using SSL/HTTPS: %s" % SSL)
             print("Make sure the above is set correctly and 'Quin-C Self Host Service' is running on %s" % APIhostname)
             return False
