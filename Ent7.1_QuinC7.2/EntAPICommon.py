@@ -1,5 +1,5 @@
-# Version: 1.7, typo
-# Date: 8/16/2019
+# Version: 1.8, returns job id for processing jobs so they can be monitored
+# Date: 8/28/2019
 # 
 # DO NOT RUN THIS SCRIPT
 # This script contains commonly used funtions for use other EnterpriseAPI scripts
@@ -114,7 +114,7 @@ def DetectEvidenceType(path):
 # Returns status
 def AddEvidence(CaseID, definition):
     response = requests.post(baseURL + '/api/v2/enterpriseapi/core/'+str(CaseID)+'/processdata',json = definition,headers = {'EnterpriseApiKey': APIkey}, verify=False)
-    return response.reason
+    return response.text
 
 # Checks if a target is listening on a specified port
 # Returns True or False

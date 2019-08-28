@@ -1,5 +1,5 @@
-# Version: 1.0, using common variable file, check for UNC paths
-# Date: 8/12/2019
+# Version: 1.1, polls and reports processing progress
+# Date: 8/28/2019
 #
 # In Windows Explorer, drag-and-drop a set of files onto this script's icon
 # This script will do the following:
@@ -22,6 +22,7 @@ from datetime import datetime
 from shutil import copyfile
 import EntAPICommon
 import sys
+import ast
 from commonVars import *
 
 # UPDATE THESE
@@ -132,7 +133,8 @@ elif choice == '2':
     os.system("pause")
     raise SystemExit
   else:
-    print("Using case '%s'" % casename)
+    CaseName = casename
+    print("Using case '%s'" % CaseName)
     print("Project folder: %s" % casepath)
     ReportsPath = os.path.dirname(casepath) + "\\Reports"
 
@@ -152,7 +154,28 @@ for item in items:
       "completeProcessingOptions": completeProcessingOptions
     }
     print("Started processing image '%s'" % item)
-    print(EntAPICommon.AddEvidence(CaseID, definition))
+    JobID = EntAPICommon.AddEvidence(CaseID, definition)
+
+    # Clean up the Job ID
+    JobID = ast.literal_eval(JobID)
+    JobID = JobID[0]     
+
+    print()
+    # Poll the job status
+    jobinfo = EntAPICommon.GetJobInfo(CaseID, JobID)
+    state = jobinfo["state"]
+
+    while (state in ["InProgress", "Submitted"]):
+      print("Job %s is %s. Will check again in 1 minute." % (JobID,state))
+      time.sleep(60)
+      jobinfo = EntAPICommon.GetJobInfo(CaseID, JobID)
+      state = jobinfo["state"]
+    if state == "Completed":
+      print("Processing job %s is %s." % (JobID,state))
+    else:
+      print("Processing job %s experienced an error and cannot proceed." % JobID)
+      os.system("pause")
+      raise SystemExit   
   elif EvidenceType == 0:
     definition = {
       "evidenceToCreate": {
@@ -162,8 +185,30 @@ for item in items:
       "completeProcessingOptions": completeProcessingOptions
     }
     print("Started processing native '%s'" % item)
-    print(EntAPICommon.AddEvidence(CaseID, definition))    
+    JobID = EntAPICommon.AddEvidence(CaseID, definition)
+
+    # Clean up the Job ID
+    JobID = ast.literal_eval(JobID)
+    JobID = JobID[0]    
+
+    print()
+    # Poll the job status
+    jobinfo = EntAPICommon.GetJobInfo(CaseID, JobID)
+    state = jobinfo["state"]
+
+    while (state in ["InProgress", "Submitted"]):
+      print("Job %s is %s. Will check again in 1 minute." % (JobID,state))
+      time.sleep(60)
+      jobinfo = EntAPICommon.GetJobInfo(CaseID, JobID)
+      state = jobinfo["state"]
+    if state == "Completed":
+      print("Processing job %s is %s." % (JobID,state))
+    else:
+      print("Processing job %s experienced an error and cannot proceed." % JobID)
+      os.system("pause")
+      raise SystemExit   
   else:
-    print("I do not know how to handle that evidence.")
-print("Monitor job progress by opening case %s and going to View > Progress Window" % CaseID)
+    print("I do not know how to handle '%s'." % item)
+
+print("The processed evidence can now be reviewed in case '%s" % CaseName)
 os.system("pause")
