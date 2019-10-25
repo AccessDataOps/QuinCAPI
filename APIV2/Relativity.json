@@ -1,0 +1,431 @@
+{
+    "exportType": 2,
+    "IsChildJob": false,
+    "ChildJobIds": "",
+    "exportBase": {
+        "TabbedProductionSetName": "",
+        "currentStatus": null,
+        "createdBy": "",
+        "dateCreated": "0001-01-01T00:00:00",
+        "dateLastModified": null,
+        "emailArchiveExportType": "Auto",
+        "exportorganizecustodian": false,
+        "exportPath": "\\\\localhost\\FastData\\Export\\1",
+        "exportTextFiles": true,
+        "id": "0",
+        "jobName": "RelativityExport",
+        "label": {
+            "children": null,
+            "color": null,
+            "count": null,
+            "id": "1",
+            "name": "Relevant"
+        },
+        "lastModifiedBy": "",
+        "outputEmailInReducedArchives": false,
+        "outputExclusionReport": false,
+        "outputMessagesAsIndividualHtmlAndRtf": false,
+        "outputMessagesAsIndividualMsg": true,
+        "prepareForBrowserBriefcase": false,
+        "productionSetExportFtkId": "",
+        "reduplication": false,
+        "appendObjectIds": false,
+        "brandTiffs": false,
+        "branding": {
+            "nearHeader": {
+                "runnerMetadata": {
+                    "format": "Empty"
+                },
+                "textFormatting": {
+                    "fontName": "Arial",
+                    "fontSize": "7"
+                }
+            },
+            "centerHeader": {
+                "runnerMetadata": {
+                    "format": "Empty"
+                },
+                "textFormatting": {
+                    "fontName": "Arial",
+                    "fontSize": "7"
+                }
+            },
+            "farHeader": {
+                "runnerMetadata": {
+                    "format": "Empty"
+                },
+                "textFormatting": {
+                    "fontName": "Arial",
+                    "fontSize": "7"
+                }
+            },
+            "nearFooter": {
+                "runnerMetadata": {
+                    "format": "Empty"
+                },
+                "textFormatting": {
+                    "fontName": "Arial",
+                    "fontSize": "7"
+                }
+            },
+            "centerFooter": {
+                "runnerMetadata": {
+                    "format": "Empty"
+                },
+                "textFormatting": {
+                    "fontName": "Arial",
+                    "fontSize": "7"
+                }
+            },
+            "farFooter": {
+                "runnerMetadata": {
+                    "format": "Empty"
+                },
+                "textFormatting": {
+                    "fontName": "Arial",
+                    "fontSize": "7"
+                }
+            },
+            "watermarkBranding": {
+                "runnerMetadata": {
+                    "format": "Empty"
+                },
+                "textFormatting": {
+                    "fontName": "Arial",
+                    "fontSize": "7"
+                },
+                "Scale": "0",
+                "Opacity": ".85"
+            }
+        },
+        "exportEmailArchives": false,
+        "exportGraphicSwf": true,
+        "exportImages": true,
+        "exportNativeFiles": true,
+        "exportNativeSwf": false,
+        "exportPriority": "OCRTextOverExtractedText",
+        "imageExcludeFileCategories": null,
+        "imageExcludeIssues": null,
+        "imageExcludeLabels": [],
+        "imageRendering": {
+            "excelDocumentSettings": {
+                "dateSubstitution": {
+                    "enabled": false,
+                    "substitutionText": "",
+                    "substitutionType": "OriginalFormula"
+                },
+                "footerMargin": "1",
+                "headerMargin": "1",
+                "isMacroSubstitutionsEnabled": "false",
+                "margin": {
+                    "bottom": "1",
+                    "left": "1",
+                    "right": "1",
+                    "top": "1"
+                },
+                "orientation": "Landscape",
+                "paperSize": "Letter",
+                "pathSubstitution": {
+                    "enabled": false,
+                    "substitutionText": "",
+                    "substitutionType": "OriginalFormula"
+                },
+                "printRange": {
+                    "max": "0",
+                    "min": "0"
+                },
+                "showHidden": false,
+                "timeSubstitution": {
+                    "enabled": false,
+                    "substitutionText": "",
+                    "substitutionType": "OriginalFormula"
+                },
+                "useOriginalDocSettings": false,
+                "blackAndWhite": "false",
+                "centerHorizontally": false,
+                "centerVertically": false,
+                "draft": "true",
+                "fitImageToPage": false,
+                "fitToPagesTall": "0",
+                "fitToPagesWide": "0",
+                "onePagePerSheet": "true",
+                "order": "OverThenDown",
+                "printComments": "PrintInPlace",
+                "printErrors": "PrintErrorsDisplayed",
+                "printGridlines": false,
+                "printHeadings": false,
+                "printTitleColumns": "false",
+                "printTitleRows": "false",
+                "zoom": "85"
+            },
+            "excludedExtensions": "",
+            "extensionsToConvertToJpg": "",
+            "generateSearchablePdf": false,
+            "imageConversionType": "PDF",
+            "imageDpi": "300",
+            "jpgQuality": "85",
+            "powerPointSettings": {
+                "color": "Color",
+                "dateSubstitution": {
+                    "enabled": "false",
+                    "substitutionText": "",
+                    "substitutionType": "CustomText"
+                },
+                "fitImageToPage": "false",
+                "orientation": "Portrait",
+                "paperSize": "A3",
+                "printComments": "PrintInPlace",
+                "printLayout": "FullPage",
+                "slidesPerPage": "1"
+            },
+            "tiffCompression": "None",
+            "useExistingImage": true,
+            "useExtensionsToConvertToJpg": false,
+            "useSwfImage": false,
+            "wordDocumentSettings": {
+                "dateSubstitution": {
+                    "enabled": false,
+                    "substitutionText": "",
+                    "substitutionType": "OriginalFormula"
+                },
+                "footerMargin": "1",
+                "headerMargin": "1",
+                "isMacroSubstitutionsEnabled": false,
+                "margin": {
+                    "bottom": "1",
+                    "left": "1",
+                    "right": "1",
+                    "top": "1"
+                },
+                "orientation": "Landscape",
+                "paperSize": "Letter",
+                "pathSubstitution": {
+                    "enabled": false,
+                    "substitutionText": "",
+                    "substitutionType": "OriginalFormula"
+                },
+                "printRange": {
+                    "max": "0",
+                    "min": "0"
+                },
+                "showHidden": false,
+                "timeSubstitution": {
+                    "enabled": false,
+                    "substitutionText": "",
+                    "substitutionType": "OriginalFormula"
+                },
+                "useOriginalDocSettings": false,
+                "suppressEndnotes": true,
+                "usernameSubstitution": {
+                    "enabled": false,
+                    "substitutionText": "",
+                    "substitutionType": "OriginalFormula"
+                }
+            }
+        },
+        "includeFilteredText": "true",
+        "isBranded": "false",
+        "maintainExistingOCR": false,
+        "namingHierarchy": {
+            "numberingScheme": "US",
+            "documentNumbering": {
+                "numberPadding": "6",
+                "prefix": "AD_",
+                "startingNumber": "1",
+                "suffix": "",
+                "numberingOption": "DocumentNumberingTiedToPageNumbering",
+                "pageNumbering": {
+                    "NumberPadding": "4",
+                    "Prefix": "",
+                    "StartingNumber": "1",
+                    "Suffix": ""
+                }
+            },
+            "folderNumbering": {
+                "numberPadding": "6",
+                "prefix": "",
+                "startingNumber": "1",
+                "suffix": "",
+                "childLimit": "1000",
+                "preserveChildNumberingAcrossContainers": "true"
+            },
+            "keepFamiliesTogether": "true",
+            "volumeNumbering": {
+                "numberPadding": "6",
+                "prefix": "",
+                "startingNumber": "1",
+                "suffix": "",
+                "childLimit": "1000",
+                "preserveChildNumberingAcrossContainers": "true",
+                "imageFolderName": "Images",
+                "nativeFolderName": "Natives",
+                "textFolderName": "Text",
+                "volumeCollating": "MegaByte",
+                "volumeCollatingUnit": "4000"
+            }
+        },
+        "nativeExcludeFileCategories": null,
+        "nativeExcludeIssues": null,
+        "nativeExcludeLabels": [],
+        "nativeFileNaming": "DocId",
+        "normalizePageSize": false,
+        "oCRAll": false,
+        "oCRDocThatLackExtractedText": false,
+        "oCRFilesDontHaveExistingText": false,
+        "oCRRedactedImages": "false",
+        "omitZeroByteNatives": "true",
+        "paperSize": "Letter",
+        "slipsheetPath": "",
+        "slipsheets": null,
+        "textFileEncoding": "Ansi",
+        "volumeItemSortings": "",
+        "loadFileGenerations": [
+            {
+                "loadFileSettings": {
+                    "loadFileEncoding": "Utf8",
+                    "loadFileMapping": {
+                        "fieldMappings": [
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "DOCID",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@T"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "MSGID",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@MSGID"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "PARENTDOCID",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@PARENTID"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "ATTACHLIST",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@ATTACH"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "TO",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@TO"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "FROM",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@FROM"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "RECEIVEDDATE",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@DATERCVD"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "RECEIVEDTIME",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@C RECEIVEDTIME"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "EMAILFOLDER",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@FOLDERNAME"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "EMAILSUBJECT",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@SUBJECT"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "CC",
+                                "isCustomField": true,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@CC"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "BCC",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@BCC"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "SENTDATE",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@DATESENT"
+                            },
+                            {
+                                "dataFormat": "Text",
+                                "ftkColumn": "SENTTIME",
+                                "isCustomField": false,
+                                "isCustomLoadFileColumn": false,
+                                "loadFileColumnDescription": "AccessData object",
+                                "loadFileColumnName": "@C SENTTIME"
+                            }
+                        ],
+                        "format": "SummationEdii",
+                        "multiEntryDelimiter": "",
+                        "useDelimiters": false,
+                        "Delimiter": {
+                            "CommaDelimiter": "",
+                            "NewlineDelimiter": "",
+                            "QuoteDelimiter": ""
+                        },
+                        "AuthenticationType": "Basic",
+                        "ClientUrl": "",
+                        "IsDirectRelativityExport": false,
+                        "OverWriteMode": "0",
+                        "OverlayBehavior": "UseRelativityDefaults",
+                        "Password": "",
+                        "PasswordSalt": "",
+                        "UserName": "",
+                        "WorkspaceId": null,
+                        "WorkspaceName": "",
+                        "id": -1
+                    },
+                    "loadFileName": "summation_export",
+                    "ShowRowHeader": false
+                },
+                "id": 0,
+                "createdBy": "",
+                "currentStatus": null
+            }
+        ],
+        "produceLoadFile": true
+    }
+}
